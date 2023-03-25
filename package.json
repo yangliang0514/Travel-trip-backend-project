@@ -5,9 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "startProduction": "NODE_ENV=production nodemon server.js",
-    "watch": "parcel watch ./public/js/index.js --dist-dir ./public/js",
-    "build": "parcel build ./public/js/index.js --dist-dir ./public/js --out-file bundle.js"
+    "startProduction": "NODE_ENV=production nodemon server.js"
   },
   "author": "Kevin Yang",
   "license": "ISC",

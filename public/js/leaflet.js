@@ -1,29 +1,31 @@
-const locationsData = JSON.parse(
-  document.querySelector("#map").dataset.locations
-);
+const mapPort = document.querySelector("#map");
 
-const map = L.map("map").setView([31.111745, -118.113491], 5);
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution:
-    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-}).addTo(map);
+if (mapPort) {
+  const locationsData = JSON.parse(mapPort.dataset.locations);
 
-const markerArray = [];
-locationsData.forEach((loc) => {
-  const reversedArr = [...loc.coordinates].reverse();
+  const map = L.map("map").setView([31.111745, -118.113491], 5);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
 
-  const myIcon = L.icon({
-    iconUrl: "./../img/pin.png",
-    iconSize: [30, 35],
-    iconAnchor: [15, 35],
+  const markerArray = [];
+  locationsData.forEach((loc) => {
+    const reversedArr = [...loc.coordinates].reverse();
+
+    const myIcon = L.icon({
+      iconUrl: "./../img/pin.png",
+      iconSize: [30, 35],
+      iconAnchor: [15, 35],
+    });
+
+    L.marker(reversedArr, { icon: myIcon }).addTo(map);
+    markerArray.push(reversedArr);
   });
 
-  L.marker(reversedArr, { icon: myIcon }).addTo(map);
-  markerArray.push(reversedArr);
-});
+  const bounds = L.latLngBounds(markerArray);
+  map.fitBounds(bounds);
 
-const bounds = L.latLngBounds(markerArray);
-map.fitBounds(bounds);
-
-map.scrollWheelZoom.disable();
+  map.scrollWheelZoom.disable();
+}
