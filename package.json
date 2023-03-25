@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "startProduction": "NODE_ENV=production nodemon server.js"
+    "startProd": "NODE_ENV=production nodemon server.js"
   },
   "author": "Kevin Yang",
   "license": "ISC",

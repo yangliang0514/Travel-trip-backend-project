@@ -43,7 +43,8 @@ async function logout() {
       url: "http://127.0.0.1:8080/api/v1/users/logout",
     });
     if (res.data.status === "success") {
-      location.reload(true);
+      location.assign("/");
+      // location.reload(true);
     }
   } catch (err) {
     showAlert("error", "Error loggingout, try again!");

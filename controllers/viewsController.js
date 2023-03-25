@@ -1,4 +1,5 @@
 const { render } = require("pug");
+const AppError = require("../utilities/appError");
 const Tour = require("./../models/tourModel");
 const catchAsync = require("./../utilities/catchAsync");
 
@@ -20,6 +21,11 @@ exports.getTour = catchAsync(async (req, res, next) => {
     path: "reviews",
     fields: "review rating user",
   });
+
+  if (!tour) {
+    next(new AppError("There's no tour with that name", 404));
+    return;
+  }
 
   res.status(200).render("tour", {
     title: tour.name,

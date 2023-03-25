@@ -5,7 +5,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || "error";
 
   if (process.env.NODE_ENV === "development") {
-    sendErrorDev(err, res);
+    sendErrorDev(err, req, res);
   }
   if (process.env.NODE_ENV === "production") {
     let error = Object.create(err);
@@ -16,38 +16,72 @@ module.exports = (err, req, res, next) => {
     if (error.name === "JsonWebTokenError") error = handleJWTError();
     if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
 
-    sendErrorProd(error, res);
+    sendErrorProd(error, req, res);
   }
 };
 
-function sendErrorDev(err, res) {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
+function sendErrorDev(err, req, res) {
+  // API
+  if (req.originalUrl.startsWith("/api")) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+    });
+    return;
+  }
+
+  // Rendered website
+  console.error("ERROR", err);
+  res.status(err.statusCode).render("error", {
+    title: "Something went wrong!",
     message: err.message,
-    stack: err.stack,
   });
 }
 
-function sendErrorProd(err, res) {
-  // Operational error, send error to the client
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
-  } else {
-    // Programming error, only send in development, don't leak error details to the client
+function sendErrorProd(err, req, res) {
+  // API
+  if (req.originalUrl.startsWith("/api")) {
+    // Operational error, send error to the client
+    if (err.isOperational) {
+      res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+      return;
+    }
 
+    // Programming error, only send in development, don't leak error details to the client
     // 1. Log the error
     console.error("ERROR", err);
-
     // 2. Send generic message
     res.status(500).json({
       status: "error",
       message: "Something went wrong!",
     });
+    return;
   }
+
+  // Rendered website
+  // Operational error, send error to the client
+  if (err.isOperational) {
+    res.status(err.statusCode).render("error", {
+      title: "Something went wrong!",
+      message: err.message,
+    });
+    return;
+  }
+
+  // Programming error, only send in development, don't leak error details to the client
+  // 1. Log the error
+  console.error("ERROR", err);
+  // 2. Send generic message
+  res.status(err.statusCode).render("error", {
+    title: "Something went wrong!",
+    message: "Please try again later",
+  });
+  return;
 }
 
 function handleCastErrorDB(err) {
