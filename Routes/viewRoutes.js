@@ -8,6 +8,11 @@ module.exports = router;
 
 router.get("/me", authController.protect, viewsController.getAccount);
 router.get("/tour/:slug", authController.protect, viewsController.getTour);
+router.post(
+  "/submit-user-data",
+  authController.protect,
+  viewsController.updateUserData
+);
 
 router.use(authController.isLoggedIn);
 

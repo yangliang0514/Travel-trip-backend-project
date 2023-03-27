@@ -1,4 +1,4 @@
-const loginForm = document.querySelector(".form");
+const loginForm = document.querySelector(".form--login");
 const emailField = document.querySelector("#email");
 const passwordField = document.querySelector("#password");
 const logOutBtn = document.querySelector(".nav__el--logout");
