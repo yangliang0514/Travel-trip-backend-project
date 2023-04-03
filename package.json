@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "startProd": "NODE_ENV=production nodemon server.js",
-    "parcel": "npx parcel public/js/index.js --dist-dir public/js/bundle"
+    "parcel": "npx parcel public/js/main.js --dist-dir public/js/bundle"
   },
   "author": "Kevin Yang",
   "license": "ISC",

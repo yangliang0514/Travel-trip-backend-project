@@ -142,13 +142,13 @@
       this[globalName] = mainExports;
     }
   }
-})({"1CuIl":[function(require,module,exports) {
+})({"4LOpo":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
-module.bundle.HMR_BUNDLE_ID = "a90b2cd62445a038";
+module.bundle.HMR_BUNDLE_ID = "3de7c0905b48fff9";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser, globalThis, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -556,7 +556,7 @@ function hmrAccept(bundle, id) {
     });
 }
 
-},{}],"f2QDv":[function(require,module,exports) {
+},{}],"6oGqv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _login = require("./login");
 var _map = require("./map");
@@ -565,10 +565,15 @@ var _updateUser = require("./updateUser");
 const mapPort = document.querySelector("#map");
 const loginForm = document.querySelector(".form--login");
 const userDataForm = document.querySelector(".form-user-data");
-const emailField = document.querySelector("#email");
 const nameField = document.querySelector("#name");
+const emailField = document.querySelector("#email");
 const passwordField = document.querySelector("#password");
 const logOutBtn = document.querySelector(".nav__el--logout");
+const userPasswordForm = document.querySelector(".form-user-password");
+const passwordCurrField = document.querySelector("#password-current");
+const newPasswordField = document.querySelector("#password");
+const passwordConfField = document.querySelector("#password-confirm");
+const savePasswordBtn = document.querySelector(".btn--save-password");
 if (loginForm) loginForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     (0, _login.login)(emailField.value, passwordField.value);
@@ -580,46 +585,36 @@ if (mapPort) {
 }
 if (userDataForm) userDataForm.addEventListener("submit", (e)=>{
     e.preventDefault();
-    (0, _updateUser.updateData)(nameField.value, emailField.value);
+    (0, _updateUser.updateSettings)({
+        name: nameField.value,
+        email: emailField.value
+    }, "data");
+});
+if (userPasswordForm) userPasswordForm.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    // telling the user password is updating... (before the await)
+    savePasswordBtn.textContent = "Updating...";
+    await (0, _updateUser.updateSettings)({
+        passwordCurrent: passwordCurrField.value,
+        password: newPasswordField.value,
+        passwordConfirm: passwordConfField.value
+    }, "password");
+    // change the button text back
+    savePasswordBtn.textContent = "Save Password";
+    // clear the input fields, after the password was updated
+    passwordCurrField.value = "";
+    newPasswordField.value = "";
+    passwordConfField.value = "";
 });
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./login":"7yHem","./updateUser":"575AG","./map":"GDuAq"}],"gkKU3":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"7yHem":[function(require,module,exports) {
+},{"./login":"7yHem","./map":"GDuAq","./updateUser":"575AG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7yHem":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "logout", ()=>logout);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _alerts = require("./alerts");
 async function login(email, password) {
     try {
         const res = await (0, _axiosDefault.default)({
@@ -631,13 +626,13 @@ async function login(email, password) {
             }
         });
         if (res.data.status === "success") {
-            showAlert("success", "Logged in successfully!");
+            (0, _alerts.showAlert)("success", "Logged in successfully!");
             setTimeout(()=>{
                 location.assign("/");
             }, 1500);
         }
     } catch (err) {
-        showAlert("error", err.response.data.message);
+        (0, _alerts.showAlert)("error", err.response.data.message);
     }
 }
 async function logout() {
@@ -648,11 +643,11 @@ async function logout() {
         });
         if (res.data.status === "success") location.assign("/");
     } catch (err) {
-        showAlert("error", "Error loggingout, try again!");
+        (0, _alerts.showAlert)("error", "Error loggingout, try again!");
     }
 }
 
-},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jo6P5":[function(require,module,exports) {
+},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./alerts":"6Mcnf"}],"jo6P5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>(0, _axiosJsDefault.default));
@@ -1324,7 +1319,37 @@ function bind(fn, thisArg) {
 }
 exports.default = bind;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cpqD8":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"cpqD8":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _utilsJs = require("./../utils.js");
@@ -4770,31 +4795,7 @@ Object.entries(HttpStatusCode).forEach(([key, value])=>{
 });
 exports.default = HttpStatusCode;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"575AG":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-// Update the current user's data
-parcelHelpers.export(exports, "updateData", ()=>updateData);
-var _axios = require("axios");
-var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _alerts = require("./alerts");
-async function updateData(name, email) {
-    try {
-        const res = await (0, _axiosDefault.default)({
-            method: "PATCH",
-            url: "http://127.0.0.1:8080/api/v1/users/updateMe",
-            data: {
-                name,
-                email
-            }
-        });
-        if (res.data.status === "success") (0, _alerts.showAlert)("success", "Data updated successfully!");
-    } catch (err) {
-        (0, _alerts.showAlert)("error", err.response.data.message);
-    }
-}
-
-},{"axios":"jo6P5","./alerts":"6Mcnf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6Mcnf":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6Mcnf":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "showAlert", ()=>showAlert);
@@ -4851,7 +4852,7 @@ function displayMap(locationsData) {
 }
 exports.default = displayMap;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","leaflet":"iFbO2"}],"iFbO2":[function(require,module,exports) {
+},{"leaflet":"iFbO2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iFbO2":[function(require,module,exports) {
 /* @preserve
  * Leaflet 1.9.3, a JS library for interactive maps. https://leafletjs.com
  * (c) 2010-2022 Vladimir Agafonkin, (c) 2010-2011 CloudMade
@@ -15373,6 +15374,32 @@ exports.default = displayMap;
     window.L = exports1;
 });
 
-},{}]},["1CuIl","f2QDv"], "f2QDv", "parcelRequire11c7")
+},{}],"575AG":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+// Update the current user's data
+// type is either "password" or "data"
+// data is a object for the data user wants to update
+parcelHelpers.export(exports, "updateSettings", ()=>updateSettings);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _alerts = require("./alerts");
+async function updateSettings(data, type) {
+    try {
+        let url;
+        if (type === "password") url = "updateMyPassword";
+        if (type === "data") url = "updateMe";
+        const res = await (0, _axiosDefault.default)({
+            method: "PATCH",
+            url: `http://127.0.0.1:8080/api/v1/users/${url}`,
+            data
+        });
+        if (res.data.status === "success") (0, _alerts.showAlert)("success", `${type.toUpperCase()} updated successfully!`);
+    } catch (err) {
+        (0, _alerts.showAlert)("error", err.response.data.message);
+    }
+}
 
-//# sourceMappingURL=index.js.map
+},{"axios":"jo6P5","./alerts":"6Mcnf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4LOpo","6oGqv"], "6oGqv", "parcelRequire11c7")
+
+//# sourceMappingURL=main.js.map
