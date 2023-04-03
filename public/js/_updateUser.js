@@ -1,5 +1,5 @@
 import axios from "axios";
-import { showAlert } from "./alerts";
+import { showAlert } from "./_alerts";
 
 // Update the current user's data
 // type is either "password" or "data"

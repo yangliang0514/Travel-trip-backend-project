@@ -1,6 +1,6 @@
-import { login, logout } from "./login";
-import displayMap from "./map";
-import { updateSettings } from "./updateUser";
+import { login, logout } from "./_login";
+import displayMap from "./_map";
+import { updateSettings } from "./_updateUser";
 
 const mapPort = document.querySelector("#map");
 const loginForm = document.querySelector(".form--login");

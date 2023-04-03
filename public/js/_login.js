@@ -1,5 +1,5 @@
 import axios from "axios";
-import { showAlert } from "./alerts";
+import { showAlert } from "./_alerts";
 
 export async function login(email, password) {
   try {

@@ -558,10 +558,10 @@ function hmrAccept(bundle, id) {
 
 },{}],"6oGqv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _login = require("./login");
-var _map = require("./map");
+var _login = require("./_login");
+var _map = require("./_map");
 var _mapDefault = parcelHelpers.interopDefault(_map);
-var _updateUser = require("./updateUser");
+var _updateUser = require("./_updateUser");
 const mapPort = document.querySelector("#map");
 const loginForm = document.querySelector(".form--login");
 const userDataForm = document.querySelector(".form-user-data");
@@ -607,14 +607,44 @@ if (userPasswordForm) userPasswordForm.addEventListener("submit", async (e)=>{
     passwordConfField.value = "";
 });
 
-},{"./login":"7yHem","./map":"GDuAq","./updateUser":"575AG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7yHem":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./_login":"a4i76","./_map":"hPPOB","./_updateUser":"aRzjy"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"a4i76":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "logout", ()=>logout);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _alerts = require("./alerts");
+var _alerts = require("./_alerts");
 async function login(email, password) {
     try {
         const res = await (0, _axiosDefault.default)({
@@ -647,7 +677,7 @@ async function logout() {
     }
 }
 
-},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./alerts":"6Mcnf"}],"jo6P5":[function(require,module,exports) {
+},{"axios":"jo6P5","./_alerts":"gCtli","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jo6P5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>(0, _axiosJsDefault.default));
@@ -1319,37 +1349,7 @@ function bind(fn, thisArg) {
 }
 exports.default = bind;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"cpqD8":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cpqD8":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _utilsJs = require("./../utils.js");
@@ -4795,7 +4795,7 @@ Object.entries(HttpStatusCode).forEach(([key, value])=>{
 });
 exports.default = HttpStatusCode;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6Mcnf":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gCtli":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "showAlert", ()=>showAlert);
@@ -4811,7 +4811,7 @@ function hideAlert() {
     if (el) el.remove();
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"GDuAq":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hPPOB":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _leaflet = require("leaflet");
@@ -15374,7 +15374,7 @@ exports.default = displayMap;
     window.L = exports1;
 });
 
-},{}],"575AG":[function(require,module,exports) {
+},{}],"aRzjy":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // Update the current user's data
@@ -15383,7 +15383,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "updateSettings", ()=>updateSettings);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _alerts = require("./alerts");
+var _alerts = require("./_alerts");
 async function updateSettings(data, type) {
     try {
         let url;
@@ -15400,6 +15400,6 @@ async function updateSettings(data, type) {
     }
 }
 
-},{"axios":"jo6P5","./alerts":"6Mcnf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4LOpo","6oGqv"], "6oGqv", "parcelRequire11c7")
+},{"axios":"jo6P5","./_alerts":"gCtli","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4LOpo","6oGqv"], "6oGqv", "parcelRequire11c7")
 
 //# sourceMappingURL=main.js.map
