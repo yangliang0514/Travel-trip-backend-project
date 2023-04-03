@@ -1,9 +1,12 @@
-import L from "leaflet";
-import { login, logout } from "./login.js";
+import { login, logout } from "./login";
+import displayMap from "./map";
+import { updateData } from "./updateUser";
 
 const mapPort = document.querySelector("#map");
 const loginForm = document.querySelector(".form--login");
+const userDataForm = document.querySelector(".form-user-data");
 const emailField = document.querySelector("#email");
+const nameField = document.querySelector("#name");
 const passwordField = document.querySelector("#password");
 const logOutBtn = document.querySelector(".nav__el--logout");
 
@@ -20,30 +23,12 @@ if (logOutBtn) {
 
 if (mapPort) {
   const locationsData = JSON.parse(mapPort.dataset.locations);
+  displayMap(locationsData);
+}
 
-  const map = L.map("map").setView([31.111745, -118.113491], 5);
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  }).addTo(map);
-
-  const markerArray = [];
-  locationsData.forEach((loc) => {
-    const reversedArr = [...loc.coordinates].reverse();
-
-    const myIcon = L.icon({
-      iconUrl: "./../img/pin.png",
-      iconSize: [30, 35],
-      iconAnchor: [15, 35],
-    });
-
-    L.marker(reversedArr, { icon: myIcon }).addTo(map);
-    markerArray.push(reversedArr);
+if (userDataForm) {
+  userDataForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    updateData(nameField.value, emailField.value);
   });
-
-  const bounds = L.latLngBounds(markerArray);
-  map.fitBounds(bounds);
-
-  map.scrollWheelZoom.disable();
 }
