@@ -5,11 +5,13 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "startProd": "NODE_ENV=production nodemon server.js"
+    "startProd": "NODE_ENV=production nodemon server.js",
+    "parcel": "npx parcel public/js/index.js --dist-dir public/js/bundle"
   },
   "author": "Kevin Yang",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.3.4",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

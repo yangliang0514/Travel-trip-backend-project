@@ -1,20 +1,6 @@
-const loginForm = document.querySelector(".form--login");
-const emailField = document.querySelector("#email");
-const passwordField = document.querySelector("#password");
-const logOutBtn = document.querySelector(".nav__el--logout");
+import axios from "axios";
 
-if (loginForm) {
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    login(emailField.value, passwordField.value);
-  });
-}
-
-if (logOutBtn) {
-  logOutBtn.addEventListener("click", logout);
-}
-
-async function login(email, password) {
+export async function login(email, password) {
   try {
     const res = await axios({
       method: "POST",
@@ -36,7 +22,7 @@ async function login(email, password) {
   }
 }
 
-async function logout() {
+export async function logout() {
   try {
     const res = await axios({
       method: "GET",
