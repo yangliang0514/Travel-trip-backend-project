@@ -2,6 +2,35 @@ const User = require("./../models/userModel");
 const catchAsync = require("../utilities/catchAsync");
 const AppError = require("../utilities/appError");
 const factory = require("./handlerFactory");
+const multer = require("multer");
+
+// create a path and the file name to allow upload
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/img/users");
+  },
+  filename: (req, file, cb) => {
+    // filename: user-user_id-timestamp.fileExtension
+    // The file extension
+    const ext = file.mimetype.split("/")[1];
+    // Pass in the file name we want to set
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+});
+
+//  a multer filter, to check if the file is an image
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+    return;
+  }
+
+  cb(new AppError("Not an image, please upload only inages", 400), false);
+};
+
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadUserPhoto = upload.single("photo");
 
 // For the current user to update his own data
 exports.updateMe = catchAsync(async function (req, res, next) {
@@ -17,6 +46,8 @@ exports.updateMe = catchAsync(async function (req, res, next) {
   }
   // 2. Filter out unwanted fields that are not allowed to be updated
   const filteredData = filterObject(req.body, "name", "email");
+  // to add a photo property of the file name to the object that stores the updated data
+  if (req.file) filteredData.photo = req.file.filename;
 
   // 3. Update user data
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredData, {
