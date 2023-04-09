@@ -585,10 +585,13 @@ if (mapPort) {
 }
 if (userDataForm) userDataForm.addEventListener("submit", (e)=>{
     e.preventDefault();
-    (0, _updateUser.updateSettings)({
-        name: nameField.value,
-        email: emailField.value
-    }, "data");
+    // a web api for creating an object that can send data like using form with encode in html
+    const form = new FormData();
+    // injecting the data in
+    form.append("name", nameField.value);
+    form.append("email", emailField.value);
+    form.append("photo", document.getElementById("photo").file[0]);
+    (0, _updateUser.updateSettings)(form, "data");
 });
 if (userPasswordForm) userPasswordForm.addEventListener("submit", async (e)=>{
     e.preventDefault();

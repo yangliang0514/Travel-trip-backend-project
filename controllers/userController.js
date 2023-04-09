@@ -1,22 +1,13 @@
+const sharp = require("sharp");
+const multer = require("multer");
 const User = require("./../models/userModel");
 const catchAsync = require("../utilities/catchAsync");
 const AppError = require("../utilities/appError");
 const factory = require("./handlerFactory");
-const multer = require("multer");
 
-// create a path and the file name to allow upload
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/img/users");
-  },
-  filename: (req, file, cb) => {
-    // filename: user-user_id-timestamp.fileExtension
-    // The file extension
-    const ext = file.mimetype.split("/")[1];
-    // Pass in the file name we want to set
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  },
-});
+// only save the file in memory before processing it, no need to store it in the disk
+// so it'll be avalible in the req.file.buffer
+const multerStorage = multer.memoryStorage();
 
 //  a multer filter, to check if the file is an image
 const multerFilter = (req, file, cb) => {
@@ -31,6 +22,22 @@ const multerFilter = (req, file, cb) => {
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.uploadUserPhoto = upload.single("photo");
+
+exports.resizeUserPhoto = (req, res, next) => {
+  // go to the next middleware if there's no file in the request
+  if (!req.file) return next();
+
+  // save the file name in the req for other middlewares to use
+  req.file.fileName = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.fileName}`);
+
+  next();
+};
 
 // For the current user to update his own data
 exports.updateMe = catchAsync(async function (req, res, next) {
