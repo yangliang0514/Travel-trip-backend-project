@@ -1,13 +1,59 @@
+const multer = require("multer");
+const sharp = require("sharp");
 const Tour = require("../models/tourModel");
 const catchAsync = require("../utilities/catchAsync");
 const AppError = require("../utilities/appError");
 const factory = require("./handlerFactory");
 
-exports.getAllTours = factory.getAll(Tour);
-exports.getTour = factory.getOne(Tour, { path: "reviews" });
-exports.createTour = factory.createOne(Tour);
-exports.updateTour = factory.updateOne(Tour);
-exports.deleteTour = factory.deleteOne(Tour);
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+    return;
+  }
+
+  cb(new AppError("Not an image, please upload only inages", 400), false);
+};
+
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadTourImages = upload.fields([
+  { name: "imageCover", maxcount: 1 },
+  { name: "images", maxCount: 3 },
+]);
+
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+  // it's files here because we're dealing with multiple images
+  if (!req.files.imageCover || !req.files.images) return next();
+
+  // for the update function to have a new file name
+  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+
+  // process cover images (req.files returns an array)
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.body.imageCover}`);
+
+  // process images
+  req.body.images = await Promise.all(
+    req.files.images.map(async (image, i) => {
+      const fileName = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+
+      await sharp(image.buffer)
+        .resize(2000, 1333)
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${fileName}`);
+
+      return fileName;
+    })
+  );
+
+  next();
+});
 
 exports.aliasTopTours = async (request, response, next) => {
   request.query.limit = "5";
@@ -164,3 +210,9 @@ exports.getDistances = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getAllTours = factory.getAll(Tour);
+exports.getTour = factory.getOne(Tour, { path: "reviews" });
+exports.createTour = factory.createOne(Tour);
+exports.updateTour = factory.updateOne(Tour);
+exports.deleteTour = factory.deleteOne(Tour);

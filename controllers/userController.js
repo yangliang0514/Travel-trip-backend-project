@@ -23,21 +23,21 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.uploadUserPhoto = upload.single("photo");
 
-exports.resizeUserPhoto = (req, res, next) => {
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   // go to the next middleware if there's no file in the request
   if (!req.file) return next();
 
   // save the file name in the req for other middlewares to use
   req.file.fileName = `user-${req.user.id}-${Date.now()}.jpeg`;
 
-  sharp(req.file.buffer)
+  await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toFile(`public/img/users/${req.file.fileName}`);
 
   next();
-};
+});
 
 // For the current user to update his own data
 exports.updateMe = catchAsync(async function (req, res, next) {
