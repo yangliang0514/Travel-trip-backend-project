@@ -15436,7 +15436,7 @@ async function bookTour(tourId) {
     }
 }
 
-},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@stripe/stripe-js":"e9NTD","./_alerts":"gCtli"}],"e9NTD":[function(require,module,exports) {
+},{"@stripe/stripe-js":"e9NTD","axios":"jo6P5","./_alerts":"gCtli","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"e9NTD":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loadStripe", ()=>loadStripe);
