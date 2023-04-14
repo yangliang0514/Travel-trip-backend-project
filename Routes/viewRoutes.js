@@ -6,15 +6,15 @@ const router = express.Router();
 
 module.exports = router;
 
+router.use(authController.isLoggedIn);
+
 router.get("/me", authController.protect, viewsController.getAccount);
-router.get("/tour/:slug", authController.protect, viewsController.getTour);
+router.get("/tour/:slug", viewsController.getTour);
 router.post(
   "/submit-user-data",
   authController.protect,
   viewsController.updateUserData
 );
-
-router.use(authController.isLoggedIn);
 
 router.get("/", viewsController.getOverview);
 router.get("/login", viewsController.getLoginForm);

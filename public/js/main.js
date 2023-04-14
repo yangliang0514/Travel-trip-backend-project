@@ -1,6 +1,7 @@
 import { login, logout } from "./_login";
 import displayMap from "./_map";
 import { updateSettings } from "./_updateUser";
+import { bookTour } from "./_stripe";
 
 const mapPort = document.querySelector("#map");
 const loginForm = document.querySelector(".form--login");
@@ -14,6 +15,7 @@ const passwordCurrField = document.querySelector("#password-current");
 const newPasswordField = document.querySelector("#password");
 const passwordConfField = document.querySelector("#password-confirm");
 const savePasswordBtn = document.querySelector(".btn--save-password");
+const bookBtn = document.querySelector("#book-tour");
 
 if (loginForm) {
   loginForm.addEventListener("submit", (e) => {
@@ -65,5 +67,13 @@ if (userPasswordForm) {
     passwordCurrField.value = "";
     newPasswordField.value = "";
     passwordConfField.value = "";
+  });
+}
+
+if (bookBtn) {
+  bookBtn.addEventListener("click", (e) => {
+    e.target.textContent = "Processing...";
+    const tourId = e.target.dataset.tourId;
+    bookTour(tourId);
   });
 }
