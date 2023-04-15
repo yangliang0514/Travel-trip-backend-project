@@ -54,3 +54,9 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   // redirect to root path to clear the query strings
   res.redirect(req.originalUrl.split("?")[0]);
 });
+
+exports.createBooking = factory.createOne(Booking);
+exports.getAllBookings = factory.getAll(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);
