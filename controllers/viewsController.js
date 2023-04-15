@@ -1,8 +1,9 @@
 const { render } = require("pug");
 const AppError = require("../utilities/appError");
-const Tour = require("./../models/tourModel");
-const User = require("./../models/userModel");
-const catchAsync = require("./../utilities/catchAsync");
+const Tour = require("../models/tourModel");
+const User = require("../models/userModel");
+const Booking = require("../models/bookingModel");
+const catchAsync = require("../utilities/catchAsync");
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   // 1. GET tour data from collection
@@ -11,7 +12,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 
   // 3. Render template using the tour data from step 1
   res.status(200).render("overview", {
-    title: "All tours",
+    title: "All Tours",
     tours,
   });
 });
@@ -31,6 +32,20 @@ exports.getTour = catchAsync(async (req, res, next) => {
   res.status(200).render("tour", {
     title: tour.name,
     tour,
+  });
+});
+
+exports.getMyTours = catchAsync(async (req, res, next) => {
+  // 1. find all bookings by the user ID
+  const bookings = await Booking.find({ user: req.user.id });
+
+  // 2. find tours with the returned IDs
+  const tourIDs = bookings.map((booking) => booking.tour);
+  const tours = await Tour.find({ _id: { $in: tourIDs } });
+
+  res.status(200).render("overview", {
+    title: "My Tours",
+    tours,
   });
 });
 
